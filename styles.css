@@ -62,7 +62,7 @@ h3 { font-size: 1.2rem; font-weight: 600; }
 }
 .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 72px; }
 .brand { display: flex; align-items: center; }
-.brand-logo { height: 50px; width: auto; }
+.brand-logo { height: 56px; width: auto; }
 .brand-text { flex-direction: column; line-height: 1; }
 .brand-text strong { font-size: 1.5rem; font-weight: 800; color: var(--green); }
 .brand-text strong span { color: var(--gray); }
