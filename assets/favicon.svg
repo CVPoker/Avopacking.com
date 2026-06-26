@@ -1,15 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#6cc555"/>
-      <stop offset="1" stop-color="#4ba73a"/>
+      <stop offset="1" stop-color="#3f9a30"/>
     </linearGradient>
   </defs>
-  <rect width="512" height="512" rx="112" fill="url(#g)"/>
-  <!-- montaña -->
-  <path d="M86 360 L196 188 L246 262 L300 150 L426 360 Z" fill="#6d6e71"/>
-  <path d="M86 360 L196 188 L226 234 L196 244 L150 320 Z" fill="#ffffff" opacity=".92"/>
-  <path d="M300 150 L344 222 L312 232 L286 196 Z" fill="#ffffff" opacity=".92"/>
-  <!-- base -->
-  <rect x="70" y="372" width="372" height="26" rx="13" fill="#ffffff" opacity=".85"/>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <!-- cuerpo del aguacate (blanco) -->
+  <path d="M256 96
+           C 330 96 372 210 372 300
+           C 372 388 326 446 256 446
+           C 186 446 140 388 140 300
+           C 140 210 182 96 256 96 Z"
+        fill="#ffffff"/>
+  <!-- hueso (verde de marca) -->
+  <circle cx="256" cy="322" r="62" fill="#4ba73a"/>
 </svg>
