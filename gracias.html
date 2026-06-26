@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>¡Gracias! — AvoPack</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <meta name="theme-color" content="#5bb947" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .thanks-wrap {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 40px 22px;
+      background: linear-gradient(120deg, rgba(31,107,58,.95), rgba(46,125,50,.85));
+      color: #fff;
+    }
+    .thanks-card { max-width: 540px; }
+    .thanks-card img { height: 70px; margin: 0 auto 22px; }
+    .thanks-card h1 { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 800; margin-bottom: 14px; }
+    .thanks-card p { opacity: .95; margin-bottom: 28px; font-size: 1.08rem; }
+  </style>
+</head>
+<body>
+  <div class="thanks-wrap">
+    <div class="thanks-card">
+      <img src="assets/logo.png" alt="AvoPack"
+        onerror="this.style.display='none'" style="background:#fff;border-radius:12px;padding:8px;" />
+      <h1>¡Gracias! 🥑</h1>
+      <p>Tu mensaje fue enviado con éxito. En AvoPack te contactaremos muy pronto.</p>
+      <a href="/" class="btn btn-primary">Volver al inicio</a>
+    </div>
+  </div>
+</body>
+</html>

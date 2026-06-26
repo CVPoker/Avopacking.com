@@ -66,6 +66,9 @@ const EN = {
   form_phone: "Phone / WhatsApp",
   form_msg: "Message",
   form_send: "Send message",
+  form_sending: "Sending…",
+  form_ok: "✓ Thank you! Your message was sent. We'll get back to you soon.",
+  form_err: "Something went wrong. Please write to us at avopack.empaque@gmail.com or via WhatsApp.",
 
   footer_tag: "Quality avocados · Ciudad Guzmán, Jalisco, Mexico",
 
@@ -83,6 +86,13 @@ const EN = {
 const nodes = document.querySelectorAll("[data-i18n]");
 const ES = {};
 nodes.forEach((n) => { ES[n.getAttribute("data-i18n")] = n.innerHTML; });
+
+// Mensajes en español que no están en el HTML (estados del formulario)
+ES.form_sending = "Enviando…";
+ES.form_ok = "✓ ¡Gracias! Tu mensaje fue enviado. Te contactaremos pronto.";
+ES.form_err = "Ocurrió un error. Escríbenos a avopack.empaque@gmail.com o por WhatsApp.";
+
+function t(key) { return (document.body.classList.contains("en") ? EN : ES)[key]; }
 
 function setLang(lang) {
   const isEN = lang === "en";
@@ -124,6 +134,38 @@ nav.querySelectorAll("a").forEach((a) =>
     menuBtn.setAttribute("aria-expanded", "false");
   })
 );
+
+// Envío del formulario sin salir de la página (AJAX a FormSubmit)
+const form = document.getElementById("contactForm");
+const status = document.getElementById("formStatus");
+if (form) {
+  const submitBtn = form.querySelector('button[type="submit"]');
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    status.className = "form-status";
+    status.textContent = "";
+    submitBtn.disabled = true;
+    submitBtn.textContent = t("form_sending");
+
+    try {
+      const res = await fetch("https://formsubmit.co/ajax/avopack.empaque@gmail.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+      });
+      if (!res.ok) throw new Error("bad status");
+      status.className = "form-status ok";
+      status.textContent = t("form_ok");
+      form.reset();
+    } catch (err) {
+      status.className = "form-status err";
+      status.textContent = t("form_err");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = t("form_send");
+    }
+  });
+}
 
 // Año en el footer
 document.getElementById("year").textContent = new Date().getFullYear();
