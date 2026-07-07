@@ -95,8 +95,8 @@ body.en .lang-toggle .lang-off { color: var(--green); }
   display: flex;
   align-items: center;
   background:
-    linear-gradient(120deg, rgba(31, 107, 58, 0.92), rgba(46, 125, 50, 0.78)),
-    url("https://images.unsplash.com/photo-1601039641847-7857b994d704?auto=format&fit=crop&w=1600&q=80") center/cover;
+    linear-gradient(120deg, rgba(31, 107, 58, 0.86), rgba(46, 125, 50, 0.72)),
+    url("assets/fotos/foto-campo-1.jpg") center/cover;
   color: #fff;
   text-align: center;
 }
