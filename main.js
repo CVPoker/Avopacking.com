@@ -37,7 +37,7 @@ const EN = {
 
   video_eyebrow: "Video",
   video_title: "See AvoPack in action",
-  video_lead: "A look at our orchard, our avocado and the way we work.",
+  video_lead: "A look at our production process and our packing facilities.",
 
   prod_eyebrow: "Products",
   prod_title: "What we offer",
