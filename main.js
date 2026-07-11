@@ -8,6 +8,7 @@ const EN = {
 
   nav_home: "Home",
   nav_about: "About",
+  nav_video: "Video",
   nav_products: "Products",
   nav_quality: "Quality",
   nav_gallery: "Gallery",
@@ -33,6 +34,10 @@ const EN = {
   about_li1: "Rigorous selection by size and quality",
   about_li2: "Careful cold-chain handling",
   about_li3: "Packing tailored to customer needs",
+
+  video_eyebrow: "Video",
+  video_title: "See AvoPack in action",
+  video_lead: "A look at our orchard, our avocado and the way we work.",
 
   prod_eyebrow: "Products",
   prod_title: "What we offer",
