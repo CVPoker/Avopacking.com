@@ -193,6 +193,7 @@ body.en .lang-toggle .lang-off { color: var(--green); }
 .contact-form label { display: flex; flex-direction: column; gap: 6px; font-weight: 500; font-size: 0.9rem; color: var(--gray-dark); }
 .contact-form input, .contact-form textarea {
   border: 1.5px solid var(--line); border-radius: 10px; padding: 11px 13px; font: inherit; font-size: 0.95rem; resize: vertical;
+  width: 100%; min-width: 0;
 }
 .contact-form input:focus, .contact-form textarea:focus { outline: none; border-color: var(--green); }
 .contact-form .btn { margin-top: 6px; }
@@ -237,7 +238,7 @@ body.en .lang-toggle .lang-off { color: var(--green); }
   .nav a { padding: 12px 0; border-bottom: 1px solid var(--line); }
   .nav .nav-cta { text-align: center; margin-top: 10px; border-bottom: none; }
   .menu-btn { display: flex; }
-  .about-grid, .quality-grid, .contact-grid { grid-template-columns: 1fr; gap: 30px; }
+  .about-grid, .quality-grid, .contact-grid { grid-template-columns: minmax(0, 1fr); gap: 30px; }
   .cards { grid-template-columns: 1fr; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 22px; }
   .gallery { grid-template-columns: repeat(2, 1fr); }

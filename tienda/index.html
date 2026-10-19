@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tienda en línea — AvoPack</title>
+  <meta name="description"
+    content="Aguacate directo del empaque a tu puerta en Ciudad Guzmán y alrededores. Pide de lunes a sábado y te lo llevamos el martes." />
+
+  <meta property="og:title" content="Tienda en línea — AvoPack" />
+  <meta property="og:description" content="Aguacate directo del empaque a tu puerta en Ciudad Guzmán y alrededores." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://avopacking.com/tienda/" />
+  <meta property="og:image" content="https://avopacking.com/assets/fotos/foto-campo-1.jpg" />
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png" />
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+  <meta name="theme-color" content="#5bb947" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/tienda/tienda.css" />
+</head>
+<body>
+
+  <!-- ====== HEADER ====== -->
+  <header class="site-header" id="header">
+    <div class="container header-inner">
+      <a href="/" class="brand" aria-label="AvoPack inicio">
+        <img src="/assets/logo.png" alt="AvoPack" class="brand-logo"
+          onerror="this.style.display='none';document.getElementById('brand-text').style.display='flex';" />
+        <span class="brand-text" id="brand-text" style="display:none;">
+          <strong>Avo<span>Pack</span></strong>
+          <small>Aguacates de Calidad</small>
+        </span>
+      </a>
+
+      <nav class="nav" id="nav" aria-label="Secciones">
+        <a href="/">Inicio</a>
+        <a href="#productos">Productos</a>
+        <a href="#entrega">Entregas</a>
+        <a href="#negocios">Negocios</a>
+        <a href="#pedido" class="nav-cta">Hacer pedido</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="menu-btn" id="menuBtn" aria-label="Menú" aria-expanded="false" aria-controls="nav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ====== HERO ====== -->
+  <section class="hero hero-tienda" id="inicio">
+    <div class="container hero-content">
+      <p class="eyebrow">Tienda en línea · Ciudad Guzmán y alrededores</p>
+      <h1>Aguacate directo del empaque a tu puerta</h1>
+      <p class="hero-sub">
+        Sin intermediarios: del empaque de AvoPack a tu casa o tu negocio.
+        Pide de lunes a sábado y te lo llevamos el martes.
+      </p>
+      <div class="hero-buttons">
+        <a href="#pedido" class="btn btn-primary">Hacer mi pedido</a>
+        <a href="#entrega" class="btn btn-ghost">¿Llegamos a tu casa?</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== DATOS ====== -->
+  <section class="stats" aria-label="Cómo entregamos">
+    <div class="container stats-grid">
+      <div class="stat">
+        <strong>Lun a sáb</strong>
+        <span>pedidos hasta las 6 pm</span>
+      </div>
+      <div class="stat">
+        <strong>Martes</strong>
+        <span>te lo llevamos</span>
+      </div>
+      <div class="stat">
+        <strong>A domicilio</strong>
+        <span>Ciudad Guzmán y alrededores</span>
+      </div>
+      <div class="stat">
+        <strong>Mercado Pago</strong>
+        <span>pagas con link seguro</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PRODUCTOS ====== -->
+  <section class="section section-alt" id="productos">
+    <div class="container">
+      <div class="section-head">
+        <p class="section-eyebrow">Productos</p>
+        <h2>Escoge tu aguacate</h2>
+        <p class="section-lead" id="preciosVigencia">Cargando los precios de la semana…</p>
+      </div>
+
+      <div class="cards" id="productosGrid" aria-live="polite"></div>
+      <noscript>
+        <p class="aviso aviso-err">Para hacer tu pedido necesitas activar JavaScript, o escríbenos a
+          <a href="mailto:avopack.empaque@gmail.com">avopack.empaque@gmail.com</a>.</p>
+      </noscript>
+
+      <p class="nota-precios">
+        Precios sujetos a cambio sin previo aviso. Lo que ya pagaste conserva su precio.
+      </p>
+    </div>
+  </section>
+
+  <!-- ====== ENTREGAS ====== -->
+  <section class="section" id="entrega">
+    <div class="container">
+      <div class="section-head">
+        <p class="section-eyebrow">Entregas</p>
+        <h2>¿Llegamos a tu casa?</h2>
+        <p class="section-lead">
+          Entregamos a domicilio el martes. Recibimos pedidos de lunes a sábado hasta las 6 pm;
+          el domingo no tomamos pedidos.
+        </p>
+      </div>
+
+      <div class="zonas" id="zonas" aria-live="polite"></div>
+
+      <div class="revisar">
+        <label for="revisarMunicipio">Escoge tu municipio</label>
+        <select id="revisarMunicipio">
+          <option value="">Escoge uno</option>
+        </select>
+        <p class="aviso" id="revisarResultado" hidden></p>
+      </div>
+
+      <form class="contact-form avisame" id="avisameForm" action="https://formsubmit.co/avopack.empaque@gmail.com" method="POST" hidden novalidate>
+        <input type="hidden" name="_subject" value="Avísame cuando lleguen — avopacking.com" />
+        <input type="hidden" name="_captcha" value="false" />
+        <input type="hidden" name="_template" value="table" />
+        <input type="hidden" name="_next" value="https://avopacking.com/tienda/gracias.html" />
+        <div class="form-status" id="avisameStatus" role="status" aria-live="polite"></div>
+        <p>Déjanos tu correo y te avisamos cuando lleguemos a tu municipio.</p>
+        <label>
+          <span>Tu municipio</span>
+          <input type="text" name="municipio" required />
+        </label>
+        <label>
+          <span>Correo</span>
+          <input type="email" name="email" autocomplete="email" required />
+        </label>
+        <button type="submit" class="btn btn-primary">Avísame</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ====== COMO FUNCIONA ====== -->
+  <section class="section section-alt" id="como">
+    <div class="container">
+      <div class="section-head">
+        <p class="section-eyebrow">Cómo funciona</p>
+        <h2>Así de fácil</h2>
+      </div>
+      <ol class="pasos">
+        <li>
+          <strong>Arma tu pedido</strong>
+          <span>Escoge tus cajas y mallas y mándanos tu pedido desde esta página.
+            Pedido mínimo: una caja de 10 kg u 8 mallas.</span>
+        </li>
+        <li>
+          <strong>Paga con el link</strong>
+          <span>Te mandamos a tu correo el link de pago de Mercado Pago. Tu precio queda fijo al pagar.</span>
+        </li>
+        <li>
+          <strong>De lunes a sábado</strong>
+          <span>Recibimos pedidos hasta el sábado a las 6 pm. El domingo no tomamos pedidos.</span>
+        </li>
+        <li>
+          <strong>Te lo llevamos el martes</strong>
+          <span>Sólo entrega a domicilio, en Ciudad Guzmán y alrededores.</span>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ====== PEDIDO ====== -->
+  <section class="section" id="pedido">
+    <div class="container order-grid">
+      <div class="order-summary">
+        <p class="section-eyebrow">Tu pedido</p>
+        <h2>Revisa y manda</h2>
+        <ul class="resumen" id="resumen" aria-live="polite">
+          <li class="resumen-vacio">Todavía no escoges nada. Sube a <a href="#productos">Productos</a>.</li>
+        </ul>
+        <p class="resumen-envio">Envío: <span id="envio">escoge tu municipio</span></p>
+        <p class="resumen-total">Total: <strong id="total">$0</strong></p>
+        <p class="aviso" id="minimo">Pedido mínimo: una caja de 10 kg u 8 mallas.</p>
+      </div>
+
+      <form class="contact-form" id="pedidoForm" action="https://formsubmit.co/avopack.empaque@gmail.com" method="POST" novalidate>
+        <input type="hidden" name="_subject" value="Pedido de la tienda en línea — avopacking.com" />
+        <input type="hidden" name="_captcha" value="false" />
+        <input type="hidden" name="_template" value="table" />
+        <input type="hidden" name="_next" value="https://avopacking.com/tienda/gracias.html" />
+        <input type="hidden" name="pedido" id="campoPedido" />
+        <input type="hidden" name="envio" id="campoEnvio" />
+        <input type="hidden" name="total" id="campoTotal" />
+        <input type="hidden" name="precios_de" id="campoPrecios" />
+        <div class="form-status" id="pedidoStatus" role="status" aria-live="polite"></div>
+
+        <label>
+          <span>Nombre</span>
+          <input type="text" name="nombre" autocomplete="name" required />
+        </label>
+        <label>
+          <span>Correo</span>
+          <input type="email" name="email" autocomplete="email" required />
+          <small class="ayuda">Aquí te llega el link de pago.</small>
+        </label>
+        <label>
+          <span>Municipio</span>
+          <select name="municipio" id="pedidoMunicipio" data-municipios required>
+            <option value="">Escoge uno</option>
+          </select>
+        </label>
+        <label>
+          <span>Calle y número</span>
+          <input type="text" name="calle" autocomplete="address-line1" required />
+        </label>
+        <label>
+          <span>Colonia</span>
+          <input type="text" name="colonia" autocomplete="address-level3" required />
+        </label>
+        <label>
+          <span>Referencias para encontrarte <small>(opcional)</small></span>
+          <textarea name="referencias" rows="2"></textarea>
+        </label>
+
+        <label class="check">
+          <input type="checkbox" name="quiere_factura" value="sí" data-factura="pedidoFactura" />
+          <span>Quiero factura</span>
+        </label>
+        <fieldset class="factura" id="pedidoFactura" hidden>
+          <legend>Datos para tu factura</legend>
+          <label><span>RFC</span><input type="text" name="rfc" autocomplete="off" data-requerido /></label>
+          <label><span>Razón social</span><input type="text" name="razon_social" data-requerido /></label>
+          <label><span>Código postal fiscal</span><input type="text" name="cp_fiscal" inputmode="numeric" data-requerido /></label>
+          <label><span>Régimen fiscal</span><input type="text" name="regimen_fiscal" data-requerido /></label>
+          <label><span>Uso del CFDI</span><input type="text" name="uso_cfdi" data-requerido /></label>
+        </fieldset>
+
+        <button type="submit" class="btn btn-primary" id="pedidoEnviar" disabled>Enviar pedido</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ====== NEGOCIOS ====== -->
+  <section class="section section-alt" id="negocios">
+    <div class="container order-grid">
+      <div>
+        <p class="section-eyebrow">Negocios</p>
+        <h2>¿Tienes una taquería, restaurante o frutería?</h2>
+        <p class="section-lead">
+          Date de alta como negocio y recibe cada lunes por correo tu lista de precios de negocio.
+        </p>
+        <ul class="check-list" id="negociosReglas">
+          <li>Cajas retornables de 10 o 20 kg</li>
+          <li>Pago por transferencia antes del martes, o en efectivo al entregar</li>
+          <li>El mismo cierre del sábado y la misma entrega del martes</li>
+        </ul>
+      </div>
+
+      <form class="contact-form" id="negocioForm" action="https://formsubmit.co/avopack.empaque@gmail.com" method="POST" novalidate>
+        <input type="hidden" name="_subject" value="Alta de negocio — avopacking.com" />
+        <input type="hidden" name="_captcha" value="false" />
+        <input type="hidden" name="_template" value="table" />
+        <input type="hidden" name="_next" value="https://avopacking.com/tienda/gracias.html" />
+        <div class="form-status" id="negocioStatus" role="status" aria-live="polite"></div>
+
+        <label>
+          <span>Nombre del negocio</span>
+          <input type="text" name="negocio" autocomplete="organization" required />
+        </label>
+        <label>
+          <span>Giro</span>
+          <select name="giro" required>
+            <option value="">Escoge uno</option>
+            <option>Taquería</option>
+            <option>Restaurante</option>
+            <option>Frutería</option>
+            <option>Juguería</option>
+            <option>Cocina económica</option>
+            <option>Cafetería</option>
+            <option>Otro</option>
+          </select>
+        </label>
+        <label>
+          <span>Encargado</span>
+          <input type="text" name="encargado" autocomplete="name" required />
+        </label>
+        <label>
+          <span>Correo</span>
+          <input type="email" name="email" autocomplete="email" required />
+        </label>
+        <label>
+          <span>Municipio</span>
+          <select name="municipio" data-municipios required>
+            <option value="">Escoge uno</option>
+          </select>
+        </label>
+        <label>
+          <span>Dirección de entrega</span>
+          <input type="text" name="direccion" autocomplete="street-address" required />
+        </label>
+        <label>
+          <span>Horario en que recibe</span>
+          <input type="text" name="horario" placeholder="Por ejemplo: de 9 a 12" required />
+        </label>
+        <label>
+          <span>Kilos por semana, más o menos</span>
+          <input type="number" name="kilos_semana" min="0" step="10" inputmode="numeric" required />
+        </label>
+        <label>
+          <span>Calibre que usa <small>(opcional)</small></span>
+          <select name="calibre">
+            <option value="">No sé</option>
+            <option>Súper</option>
+            <option>Extra</option>
+            <option>Primera</option>
+            <option>Segunda</option>
+            <option>Tercera</option>
+          </select>
+        </label>
+
+        <label class="check">
+          <input type="checkbox" name="quiere_factura" value="sí" data-factura="negocioFactura" />
+          <span>Quiero factura</span>
+        </label>
+        <fieldset class="factura" id="negocioFactura" hidden>
+          <legend>Datos para tu factura</legend>
+          <label><span>RFC</span><input type="text" name="rfc" autocomplete="off" data-requerido /></label>
+          <label><span>Razón social</span><input type="text" name="razon_social" data-requerido /></label>
+          <label><span>Código postal fiscal</span><input type="text" name="cp_fiscal" inputmode="numeric" data-requerido /></label>
+          <label><span>Régimen fiscal</span><input type="text" name="regimen_fiscal" data-requerido /></label>
+          <label><span>Uso del CFDI</span><input type="text" name="uso_cfdi" data-requerido /></label>
+        </fieldset>
+
+        <label>
+          <span>Comentarios <small>(opcional)</small></span>
+          <textarea name="comentarios" rows="3"></textarea>
+        </label>
+
+        <button type="submit" class="btn btn-primary">Solicitar alta</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <strong>Avo<span>Pack</span></strong>
+        <p>Tienda en línea · Aguacate directo del empaque · Ciudad Guzmán y alrededores</p>
+      </div>
+      <div class="footer-links">
+        <a href="/">Inicio</a>
+        <a href="#productos">Productos</a>
+        <a href="#entrega">Entregas</a>
+        <a href="#negocios">Negocios</a>
+        <a href="mailto:avopack.empaque@gmail.com">avopack.empaque@gmail.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <span>© <span id="year"></span> AvoPack — avopacking.com</span>
+      </div>
+    </div>
+  </footer>
+
+  <a href="#pedido" class="barra-pedido" id="barraPedido" hidden>
+    <span>Ver mi pedido</span>
+    <strong id="barraTotal">$0</strong>
+  </a>
+
+  <script src="/tienda/tienda.js"></script>
+
+  <!-- Vercel Web Analytics -->
+  <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

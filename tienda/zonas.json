@@ -1,0 +1,31 @@
+{
+  "desde": "Ciudad Guzmán",
+  "cierre": "sábado a las 6 pm",
+  "entrega": "martes",
+  "zonas": [
+    {
+      "id": "1",
+      "envio": 0,
+      "envio_gratis_desde_kg": 0,
+      "minimo_negocio_kg": 40,
+      "municipios": [
+        { "nombre": "Ciudad Guzmán (Zapotlán el Grande)", "km": 0 },
+        { "nombre": "Zapotiltic", "km": 13.5 },
+        { "nombre": "Gómez Farías (San Andrés Ixtlán)", "km": 16.8 }
+      ]
+    },
+    {
+      "id": "2",
+      "envio": 60,
+      "envio_gratis_desde_kg": 20,
+      "minimo_negocio_kg": 80,
+      "municipios": [
+        { "nombre": "Tuxpan", "km": 29.2 },
+        { "nombre": "Sayula", "km": 30.8 },
+        { "nombre": "Tamazula de Gordiano", "km": 37.2 },
+        { "nombre": "Tecalitlán", "km": 39.4 }
+      ]
+    }
+  ],
+  "proximamente": ["Tonila", "San Gabriel", "Colima y Villa de Álvarez"]
+}

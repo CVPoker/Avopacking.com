@@ -1,0 +1,135 @@
+/* ====== AvoPack — Tienda en línea ======
+   Se carga después de /styles.css y sólo agrega lo que esta página necesita. */
+
+/* El hero de la portada ocupa casi toda la pantalla; aquí basta con menos. */
+.hero-tienda {
+  min-height: 62vh;
+  background:
+    linear-gradient(120deg, rgba(31, 107, 58, 0.88), rgba(46, 125, 50, 0.74)),
+    url("/assets/fotos/foto-campo-1.jpg") center/cover;
+}
+
+/* Foco visible para quien navega con teclado. */
+.btn:focus-visible,
+.nav a:focus-visible,
+.stepper button:focus-visible,
+.contact-form input:focus-visible,
+.contact-form select:focus-visible,
+.contact-form textarea:focus-visible,
+.check input:focus-visible {
+  outline: 3px solid var(--green-dark);
+  outline-offset: 2px;
+}
+
+/* ====== PRODUCTOS ====== */
+.producto { display: flex; flex-direction: column; }
+.producto .ph-photo { aspect-ratio: 4 / 3; min-height: 0; }
+.producto p { flex-grow: 1; }
+.producto .precio { margin: 14px 0 4px; font-size: 1.9rem; font-weight: 800; color: var(--ink); line-height: 1; flex-grow: 0; }
+.producto .precio-kg { font-size: 0.85rem; color: var(--gray); margin-bottom: 14px; flex-grow: 0; }
+
+.stepper { display: flex; align-items: center; justify-content: space-between; gap: 10px; border-top: 1px solid var(--line); padding-top: 14px; }
+.stepper button {
+  width: 48px; height: 48px; border-radius: 50%;
+  border: 2px solid var(--green); background: #fff; color: var(--green-dark);
+  font: inherit; font-size: 1.5rem; font-weight: 700; line-height: 1; cursor: pointer;
+}
+.stepper button:hover:not(:disabled) { background: var(--green); color: #fff; }
+.stepper button:disabled { border-color: var(--line); color: var(--line); cursor: default; }
+.stepper output { font-size: 1.3rem; font-weight: 700; min-width: 3ch; text-align: center; }
+
+.nota-precios { text-align: center; color: var(--gray-dark); font-size: 0.92rem; margin-top: 28px; }
+
+/* ====== ENTREGAS ====== */
+.zonas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+.zona { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }
+.zona h3 { color: var(--green-dark); margin-bottom: 12px; }
+.municipios { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+.municipios li { background: var(--bg-soft); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-size: 0.92rem; }
+.municipios small { color: var(--gray); }
+.proximamente { grid-column: 1 / -1; text-align: center; color: var(--gray-dark); font-size: 0.92rem; }
+.revisar { max-width: 520px; margin: 34px auto 0; display: flex; flex-direction: column; gap: 8px; }
+.revisar label { font-weight: 600; color: var(--gray-dark); }
+.revisar select {
+  border: 1.5px solid var(--line); border-radius: 10px; padding: 12px 13px;
+  font: inherit; font-size: 1rem; background: #fff; width: 100%;
+}
+.revisar select:focus-visible { outline: 3px solid var(--green-dark); outline-offset: 2px; }
+.revisar .aviso { margin-top: 6px; }
+.avisame { max-width: 520px; margin: 18px auto 0; }
+.avisame[hidden] { display: none; }
+.avisame p { color: var(--gray-dark); }
+.resumen-envio { display: flex; justify-content: space-between; margin-top: 12px; color: var(--gray-dark); }
+
+/* ====== COMO FUNCIONA ====== */
+.pasos {
+  list-style: none; counter-reset: paso;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px;
+}
+.pasos li {
+  counter-increment: paso;
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 22px; box-shadow: var(--shadow);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.pasos li::before {
+  content: counter(paso);
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--green); color: #fff; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.pasos strong { color: var(--green-dark); font-size: 1.05rem; }
+.pasos span { color: var(--gray-dark); font-size: 0.95rem; }
+
+/* ====== PEDIDO ====== */
+.order-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+.order-summary h2 { margin-bottom: 18px; }
+.resumen { list-style: none; border-top: 1px solid var(--line); }
+.resumen li { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.resumen .resumen-vacio { display: block; color: var(--gray-dark); }
+.resumen .resumen-vacio a { color: var(--green-dark); text-decoration: underline; }
+.resumen-total { display: flex; justify-content: space-between; font-size: 1.2rem; margin-top: 14px; }
+.resumen-total strong { font-size: 1.5rem; }
+
+.aviso { margin-top: 16px; padding: 12px 14px; border-radius: 10px; font-size: 0.92rem; background: #fff8e5; color: #7a5a00; border: 1px solid #f1dca0; }
+.aviso.ok { background: #e8f6e2; color: #2e7d32; border-color: #b9e0a8; }
+.aviso-err { background: #fdecea; color: #a5281b; border-color: #f5c6c0; }
+
+.contact-form select {
+  border: 1.5px solid var(--line); border-radius: 10px; padding: 11px 13px;
+  font: inherit; font-size: 0.95rem; background: #fff; width: 100%; min-width: 0;
+}
+.contact-form select:focus { outline: none; border-color: var(--green); }
+.contact-form .ayuda, .contact-form label small { font-weight: 400; color: var(--gray); font-size: 0.82rem; }
+.contact-form .check { flex-direction: row; align-items: center; gap: 10px; cursor: pointer; min-height: 44px; }
+.contact-form .check input { width: 22px; height: 22px; accent-color: var(--green); }
+.factura { border: 1.5px solid var(--line); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.factura[hidden] { display: none; }
+.factura legend { padding: 0 6px; font-weight: 600; font-size: 0.9rem; color: var(--green-dark); }
+.contact-form .btn:disabled { background: #b8c4b1; box-shadow: none; transform: none; cursor: not-allowed; }
+
+/* Barra fija con el total, para no perder el pedido al bajar por la página. */
+.barra-pedido {
+  position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 60;
+  max-width: 520px; margin: 0 auto;
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  min-height: 52px; padding: 12px 22px; border-radius: 999px;
+  background: var(--green-deep); color: #fff; font-weight: 600;
+  box-shadow: 0 10px 26px rgba(31, 107, 58, 0.35);
+}
+.barra-pedido[hidden], .barra-pedido.en-pedido { display: none; }
+
+/* Que el encabezado fijo no tape el título al saltar a una sección. */
+section[id] { scroll-margin-top: 72px; }
+.barra-pedido:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; }
+.site-footer { padding-bottom: 84px; }
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 880px) {
+  .pasos { grid-template-columns: repeat(2, 1fr); }
+  .order-grid, .zonas { grid-template-columns: minmax(0, 1fr); gap: 30px; }
+}
+@media (max-width: 480px) {
+  .pasos { grid-template-columns: 1fr; }
+  .hero-tienda { min-height: 0; }
+}
