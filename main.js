@@ -12,6 +12,7 @@ const EN = {
   nav_products: "Products",
   nav_quality: "Quality",
   nav_gallery: "Gallery",
+  nav_tienda: "Shop",
   nav_contact: "Contact",
 
   hero_eyebrow: "Ciudad Guzmán, Jalisco · Mexico",
@@ -19,6 +20,7 @@ const EN = {
   hero_sub: "We are an avocado packing house committed to freshness, flavor and the highest selection standards. Bringing the best Mexican avocado to your table.",
   hero_cta1: "Request a quote",
   hero_cta2: "See our products",
+  hero_cta3: "Online store",
 
   stat_1: "Mexican avocado",
   stat_2_num: "Selection",

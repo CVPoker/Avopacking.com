@@ -1,0 +1,33 @@
+{
+  "vigentes_desde": "2026-10-12",
+  "origen": "Plantilla de venta del 12-oct + $19 por kilo",
+  "productos": [
+    {
+      "id": "malla",
+      "nombre": "Malla 600 g",
+      "descripcion": "Aguacate seleccionado en malla, para la casa.",
+      "kg": 0.6,
+      "precio": 20,
+      "foto": "/assets/fotos/foto-producto-blanco.jpg",
+      "foto_alt": "Aguacate partido a la mitad"
+    },
+    {
+      "id": "extra",
+      "nombre": "Caja Extra 10 kg",
+      "descripcion": "Calibre Extra: fruta grande y pareja.",
+      "kg": 10,
+      "precio": 429,
+      "foto": "/assets/fotos/foto-campo-1.jpg",
+      "foto_alt": "Caja llena de aguacate recién cosechado"
+    },
+    {
+      "id": "primera",
+      "nombre": "Caja Primera 10 kg",
+      "descripcion": "Calibre Primera: buen tamaño a mejor precio.",
+      "kg": 10,
+      "precio": 379,
+      "foto": "/assets/fotos/foto-campo-2.jpg",
+      "foto_alt": "Aguacates en el árbol"
+    }
+  ]
+}
