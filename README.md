@@ -15,9 +15,11 @@ tienda/         La tienda en línea (avopacking.com/tienda/) — ver abajo
 
 ## La tienda en línea (`/tienda/`)
 
-Venta directa a casas y negocios de **Ciudad Guzmán y alrededores**: el cliente arma su pedido,
-lo manda desde la página y le llega por correo el link de pago de Mercado Pago. Pedidos de lunes
-a sábado hasta las 6 pm; entrega a domicilio el martes. Sólo español.
+Venta directa a casas y negocios del **sur de Jalisco (Ciudad Guzmán y alrededores), Guadalajara
+y Zapopan**: el cliente arma su pedido, lo manda desde la página y le llega por correo el link de
+pago de Mercado Pago. Pedidos de lunes a sábado hasta las 6 pm; entrega a domicilio el martes en
+el sur y el miércoles en Guadalajara y Zapopan. Sólo a domicilio y sólo en la ciudad: no se
+entrega en comunidades ni ranchos. Sólo español.
 
 ```
 tienda/index.html     La página
@@ -33,21 +35,23 @@ calibre + $19) × kilos, redondeado al precio terminado en 9 más cercano (la ma
 malla usa el renglón de Tercera. Cambia `vigentes_desde` a la fecha de la plantilla. Lo ya pagado
 conserva su precio.
 
-**El área de entrega** (`tienda/zonas.json`): cada zona tiene sus municipios (con km por
-carretera desde Ciudad Guzmán), su `envio` y desde cuántos kilos el envío no cuesta
-(`envio_gratis_desde_kg`), y el pedido mínimo de un negocio (`minimo_negocio_kg`).
+**El área de entrega** (`tienda/zonas.json`): cada zona tiene su día de reparto (`entrega`), sus
+municipios (con km por carretera desde Ciudad Guzmán), su `envio` y desde cuántos kilos el envío
+no cuesta (`envio_gratis_desde_kg`), y el pedido mínimo de un negocio (`minimo_negocio_kg`).
 `proximamente` son los municipios a los que todavía no llegamos: ahí la página ofrece
 «Avísame».
 
 Cada municipio lleva también sus **códigos postales**: `cp_ciudad` (la ciudad y sus colonias: se
-entrega) y `cp_comunidad` (comunidades y ranchos: se le confirma por correo antes de cobrarle).
+entrega) y `cp_rancho` (comunidades y ranchos: **no se entrega**; la página lo dice y el pedido no
+sale con ese código).
 El cliente puede escribir su código postal arriba de la tienda en lugar de escoger municipio, y
 el pedido lo pide y revisa que sea del municipio escogido. Lo último que el cliente revisó se
 queda en una franja bajo el encabezado y en su teléfono.
 
-Las listas se armaron el 20-oct-2026 con el catálogo de Correos de México (SEPOMEX): ciudad = un
-código con alguna colonia urbana; todo Zapotlán es ciudad; en Gómez Farías, San Sebastián del Sur
-(49120) y San Andrés Ixtlán (49130). **El catálogo de Correos es para uso particular y no se puede
+Las listas se armaron el 20-oct-2026 con el catálogo de Correos de México (SEPOMEX). En el sur,
+ciudad = un código con alguna colonia urbana; todo Zapotlán es ciudad; en Gómez Farías, San
+Sebastián del Sur (49120) y San Andrés Ixtlán (49130). Guadalajara es toda ciudad. En Zapopan,
+ciudad = urbano o colonia/fraccionamiento, y rancho = Nextipac (45220) e Ixcatán (45242). **El catálogo de Correos es para uso particular y no se puede
 redistribuir**, así que aquí sólo va nuestra lista de códigos con entrega, sin nombres de colonias.
 Para agregar un municipio, se consultan sus códigos en Correos y se copian los números.
 

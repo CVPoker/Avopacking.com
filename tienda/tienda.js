@@ -1,7 +1,7 @@
 /* ====== AvoPack — Tienda en línea ======
    Los precios salen de /tienda/precios.json: plantilla de venta de la semana + $19 por kilo.
    A dónde llegamos sale de /tienda/zonas.json: municipios por zona, con su envío y sus
-   códigos postales (los de la ciudad se entregan; los de comunidad se confirman por correo).
+   día de entrega y códigos postales (los de la ciudad se entregan; a comunidades y ranchos, no).
    Los pedidos, las altas de negocio y los «avísame» llegan por correo (FormSubmit),
    como el contacto de la portada. */
 
@@ -22,7 +22,7 @@ let vigentesDesde = "";
 const cantidades = {};
 const zonaDe = {};
 const municipioDe = {};
-const cpInfo = {};   // cp → { municipio, zona, tipo: "ciudad" | "comunidad" }
+const cpInfo = {};   // cp → { municipio, zona, tipo: "ciudad" | "rancho" }
 const cpProx = {};   // cp → municipio de «próximamente»
 let ubicacion = null; // a dónde sí llegamos: { municipio, cp, tipo }
 
@@ -87,7 +87,7 @@ function pintarZonas() {
   const caja = $("zonas");
   zonas.forEach((z, i) => {
     const tarjetaZona = el("div", { class: "zona" });
-    tarjetaZona.append(el("h3", {}, "Zona " + (i + 1) + ": " + textoEnvio(z)));
+    tarjetaZona.append(el("h3", {}, "Zona " + (i + 1) + " · " + z.entrega + ": " + textoEnvio(z)));
     const lista = el("ul", { class: "municipios" });
     z.municipios.forEach((m) => {
       const li = el("li", {}, m.nombre);
@@ -147,6 +147,7 @@ function resultado(clase, texto, enlace) {
 
 const A_PRODUCTOS = ["#productos", "Escoge tu aguacate"];
 const A_AVISAME = ["#avisameForm", "Avísame cuando lleguen"];
+const A_ZONAS = ["#entrega", "Ver a dónde entregamos"];
 
 function avisame(municipio, cp) {
   const f = $("avisameForm").elements;
@@ -160,10 +161,10 @@ function revisarMunicipio() {
   if (!m) { $("revisarResultado").hidden = true; return; }
   const z = zonaDe[m];
   if (z) {
-    const conComunidades = municipioDe[m].cp_comunidad.length > 0;
+    const conRanchos = municipioDe[m].cp_rancho.length > 0;
     resultado("ok",
-      "¡Sí llegamos a " + corto(m) + "! Te lo llevamos el martes, con " + textoEnvio(z) + "." +
-      (conComunidades ? " ¿Vives en una comunidad o rancho? Escribe tu código postal para revisarlo." : ""),
+      "¡Sí llegamos a " + corto(m) + "! Te lo llevamos el " + z.entrega + ", con " + textoEnvio(z) + "." +
+      (conRanchos ? " Sólo a la ciudad y sus colonias, no a comunidades ni ranchos." : ""),
       A_PRODUCTOS);
     fijarUbicacion({ municipio: m, cp: "", tipo: "" });
   } else {
@@ -181,14 +182,14 @@ function revisarCp() {
   const cp = campo.value;
   if (cp.length < 5) { $("revisarResultado").hidden = true; return; }
   const r = buscarCp(cp);
-  const cubierto = r.tipo === "ciudad" || r.tipo === "comunidad";
+  const cubierto = r.tipo === "ciudad";
   $("revisarMunicipio").value = cubierto ? r.municipio : "";
   if (r.tipo === "ciudad") {
-    resultado("ok", "¡Sí llegamos al " + cp + ", " + corto(r.municipio) + "! Te lo llevamos el martes, con " +
+    resultado("ok", "¡Sí llegamos al " + cp + ", " + corto(r.municipio) + "! Te lo llevamos el " + r.zona.entrega + ", con " +
       textoEnvio(r.zona) + ".", A_PRODUCTOS);
-  } else if (r.tipo === "comunidad") {
-    resultado("duda", "El " + cp + " es de una comunidad de " + corto(r.municipio) +
-      ". Haz tu pedido y te confirmamos por correo si llegamos, antes de cobrarte.", A_PRODUCTOS);
+  } else if (r.tipo === "rancho") {
+    resultado("no", "El " + cp + " es de una comunidad o rancho de " + corto(r.municipio) +
+      ". Ahí no entregamos: sólo en la ciudad y sus colonias.", A_ZONAS);
   } else if (r.tipo === "proximamente") {
     resultado("no", "Todavía no llegamos al " + cp + ", " + r.municipio + ", pero ya viene.", A_AVISAME);
     avisame(r.municipio, cp);
@@ -209,9 +210,8 @@ function fijarUbicacion(u) {
   const m = corto(ubicacion.municipio);
   const cp = ubicacion.cp ? " (" + ubicacion.cp + ")" : "";
   const z = zonaDe[ubicacion.municipio];
-  $("ubicacionTexto").textContent = ubicacion.tipo === "comunidad"
-    ? "Comunidad de " + m + cp + " · por confirmar"
-    : "Entrega en " + m + cp + " · martes · " + (z.envio ? "envío " + pesos.format(z.envio) : "envío sin costo");
+  $("ubicacionTexto").textContent =
+    "Entrega en " + m + cp + " · " + z.entrega + " · " + (z.envio ? "envío " + pesos.format(z.envio) : "envío sin costo");
   $("ubicacion").hidden = false;
   llenarPedido();
 }
@@ -252,11 +252,13 @@ function revisarPedidoCp() {
   pedidoCp.setCustomValidity("");
   nota.textContent = "";
   const r = buscarCp(pedidoCp.value);
-  if (r && (r.tipo === "ciudad" || r.tipo === "comunidad")) {
+  if (r && r.tipo === "ciudad") {
     pedidoMunicipio.value = r.municipio;
-    nota.textContent = r.tipo === "comunidad"
-      ? "Comunidad de " + corto(r.municipio) + ": te confirmamos por correo si llegamos, antes de cobrarte."
-      : corto(r.municipio) + ": te lo llevamos el martes.";
+    nota.textContent = corto(r.municipio) + ": te lo llevamos el " + r.zona.entrega + ".";
+  } else if (r && r.tipo === "rancho") {
+    pedidoCp.setCustomValidity("No entregamos en comunidades ni ranchos.");
+    nota.textContent = "Ese código es de una comunidad o rancho de " + corto(r.municipio) +
+      ": ahí no entregamos.";
   } else if (r) {
     pedidoCp.setCustomValidity("Todavía no llegamos a ese código postal.");
     nota.textContent = "Todavía no llegamos a ese código postal. Déjanos tu correo en «Avísame».";
@@ -345,7 +347,7 @@ async function cargar() {
       zonaDe[m.nombre] = zona;
       municipioDe[m.nombre] = m;
       m.cp_ciudad.forEach((cp) => { cpInfo[cp] = { municipio: m.nombre, zona, tipo: "ciudad" }; });
-      m.cp_comunidad.forEach((cp) => { cpInfo[cp] = { municipio: m.nombre, zona, tipo: "comunidad" }; });
+      m.cp_rancho.forEach((cp) => { cpInfo[cp] = { municipio: m.nombre, zona, tipo: "rancho" }; });
     }));
     proximamente.forEach((p) => p.cps.forEach((cp) => { cpProx[cp] = p.nombre; }));
 
@@ -431,10 +433,6 @@ pedidoForm.addEventListener("submit", async (e) => {
       $("campoEnvio").value = pesos.format(c.envio || 0);
       $("campoTotal").value = pesos.format(c.total);
       $("campoPrecios").value = "Precios de la semana del " + vigentesDesde;
-      const info = cpInfo[pedidoCp.value];
-      $("campoEntrega").value = info && info.tipo === "comunidad"
-        ? "Comunidad: confirmar por correo antes de cobrar"
-        : "Ciudad";
     }
   );
   if (ok) {
