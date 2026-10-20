@@ -103,11 +103,14 @@ function pintarZonas() {
     });
   });
 
-  // El selector de «¿Llegamos a tu casa?»: también los de próximamente y «otro».
+  // «¿A dónde te lo llevamos?», lo primero de la página: también los de próximamente y «otro».
   const revisar = $("revisarMunicipio");
   zonas.forEach((z) => z.municipios.forEach((m) => revisar.append(el("option", { value: m.nombre }, m.nombre))));
   proximamente.forEach((m) => revisar.append(el("option", { value: m }, m)));
   revisar.append(el("option", { value: OTRO }, OTRO));
+  const nombres = zonas.flatMap((z) => z.municipios.map((m) => m.nombre.replace(/ \(.*\)$/, "")));
+  $("dondeLista").textContent =
+    "Entregamos en " + nombres.slice(0, -1).join(", ") + " y " + nombres[nombres.length - 1] + ".";
 
   // La regla de negocios por zona.
   const reglas = $("negociosReglas");
@@ -120,23 +123,26 @@ function pintarZonas() {
 function revisarMunicipio() {
   const m = $("revisarMunicipio").value;
   const res = $("revisarResultado");
-  const avisame = $("avisameForm");
-  if (!m) { res.hidden = true; avisame.hidden = true; return; }
+  if (!m) { res.hidden = true; return; }
   res.hidden = false;
   const z = zonaDe[m];
   if (z) {
-    res.className = "aviso ok";
-    res.textContent = "¡Sí llegamos a " + m + "! Te lo llevamos el martes, con " + textoEnvio(z) + ".";
-    avisame.hidden = true;
+    res.className = "donde-resultado ok";
+    res.replaceChildren(
+      document.createTextNode("¡Sí llegamos a " + m + "! Te lo llevamos el martes, con " + textoEnvio(z) + ". "),
+      el("a", { href: "#productos" }, "Escoge tu aguacate")
+    );
     pedidoMunicipio.value = m;
     pintarResumen();
   } else {
-    res.className = "aviso";
-    res.textContent = m === OTRO
-      ? "Todavía no llegamos a todos lados."
-      : "Todavía no llegamos a " + m + ", pero ya viene.";
-    avisame.hidden = false;
-    avisame.elements.municipio.value = m === OTRO ? "" : m;
+    res.className = "donde-resultado no";
+    res.replaceChildren(
+      document.createTextNode(m === OTRO
+        ? "Todavía no llegamos a todos lados. "
+        : "Todavía no llegamos a " + m + ", pero ya viene. "),
+      el("a", { href: "#avisameForm" }, "Avísame cuando lleguen")
+    );
+    $("avisameForm").elements.municipio.value = m === OTRO ? "" : m;
   }
 }
 

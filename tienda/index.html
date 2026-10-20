@@ -62,9 +62,13 @@
         Sin intermediarios: del empaque de AvoPack a tu casa o tu negocio.
         Pide de lunes a sábado y te lo llevamos el martes.
       </p>
-      <div class="hero-buttons">
-        <a href="#pedido" class="btn btn-primary">Hacer mi pedido</a>
-        <a href="#entrega" class="btn btn-ghost">¿Llegamos a tu casa?</a>
+      <div class="donde">
+        <label for="revisarMunicipio">¿A dónde te lo llevamos?</label>
+        <select id="revisarMunicipio">
+          <option value="">Escoge tu municipio</option>
+        </select>
+        <p class="donde-resultado" id="revisarResultado" role="status" aria-live="polite" hidden></p>
+        <p class="donde-lista" id="dondeLista"></p>
       </div>
     </div>
   </section>
@@ -117,7 +121,7 @@
     <div class="container">
       <div class="section-head">
         <p class="section-eyebrow">Entregas</p>
-        <h2>¿Llegamos a tu casa?</h2>
+        <h2>A dónde entregamos</h2>
         <p class="section-lead">
           Entregamos a domicilio el martes. Recibimos pedidos de lunes a sábado hasta las 6 pm;
           el domingo no tomamos pedidos.
@@ -126,21 +130,19 @@
 
       <div class="zonas" id="zonas" aria-live="polite"></div>
 
-      <div class="revisar">
-        <label for="revisarMunicipio">Escoge tu municipio</label>
-        <select id="revisarMunicipio">
-          <option value="">Escoge uno</option>
-        </select>
-        <p class="aviso" id="revisarResultado" hidden></p>
-      </div>
+      <p class="nota-zonas">
+        Entregamos en la ciudad de cada municipio y sus colonias. ¿Vives en una comunidad o rancho?
+        Pon cómo llegar en «Referencias» y te confirmamos por correo antes de cobrarte.
+      </p>
 
-      <form class="contact-form avisame" id="avisameForm" action="https://formsubmit.co/avopack.empaque@gmail.com" method="POST" hidden novalidate>
+      <form class="contact-form avisame" id="avisameForm" action="https://formsubmit.co/avopack.empaque@gmail.com" method="POST" novalidate>
         <input type="hidden" name="_subject" value="Avísame cuando lleguen — avopacking.com" />
         <input type="hidden" name="_captcha" value="false" />
         <input type="hidden" name="_template" value="table" />
         <input type="hidden" name="_next" value="https://avopacking.com/tienda/gracias.html" />
         <div class="form-status" id="avisameStatus" role="status" aria-live="polite"></div>
-        <p>Déjanos tu correo y te avisamos cuando lleguemos a tu municipio.</p>
+        <h3>¿No está tu municipio?</h3>
+        <p>Déjanos tu correo y te avisamos cuando lleguemos.</p>
         <label>
           <span>Tu municipio</span>
           <input type="text" name="municipio" required />
