@@ -51,6 +51,12 @@
         </button>
       </div>
     </div>
+    <div class="ubicacion" id="ubicacion" hidden>
+      <div class="container ubicacion-inner">
+        <span id="ubicacionTexto"></span>
+        <a href="#inicio" id="ubicacionCambiar">Cambiar</a>
+      </div>
+    </div>
   </header>
 
   <!-- ====== HERO ====== -->
@@ -67,6 +73,10 @@
         <select id="revisarMunicipio">
           <option value="">Escoge tu municipio</option>
         </select>
+        <div class="donde-cp">
+          <label for="revisarCp">o escribe tu código postal</label>
+          <input type="text" id="revisarCp" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="Por ejemplo: 49000" />
+        </div>
         <p class="donde-resultado" id="revisarResultado" role="status" aria-live="polite" hidden></p>
         <p class="donde-lista" id="dondeLista"></p>
       </div>
@@ -131,8 +141,8 @@
       <div class="zonas" id="zonas" aria-live="polite"></div>
 
       <p class="nota-zonas">
-        Entregamos en la ciudad de cada municipio y sus colonias. ¿Vives en una comunidad o rancho?
-        Pon cómo llegar en «Referencias» y te confirmamos por correo antes de cobrarte.
+        Entregamos en la ciudad de cada municipio y sus colonias. Si tu código postal es de una
+        comunidad o rancho, haz tu pedido y te confirmamos por correo si llegamos, antes de cobrarte.
       </p>
 
       <form class="contact-form avisame" id="avisameForm" action="https://formsubmit.co/avopack.empaque@gmail.com" method="POST" novalidate>
@@ -146,6 +156,10 @@
         <label>
           <span>Tu municipio</span>
           <input type="text" name="municipio" required />
+        </label>
+        <label>
+          <span>Código postal <small>(opcional)</small></span>
+          <input type="text" name="cp" inputmode="numeric" maxlength="5" autocomplete="postal-code" />
         </label>
         <label>
           <span>Correo</span>
@@ -208,6 +222,7 @@
         <input type="hidden" name="envio" id="campoEnvio" />
         <input type="hidden" name="total" id="campoTotal" />
         <input type="hidden" name="precios_de" id="campoPrecios" />
+        <input type="hidden" name="entrega" id="campoEntrega" />
         <div class="form-status" id="pedidoStatus" role="status" aria-live="polite"></div>
 
         <label>
@@ -218,6 +233,11 @@
           <span>Correo</span>
           <input type="email" name="email" autocomplete="email" required />
           <small class="ayuda">Aquí te llega el link de pago.</small>
+        </label>
+        <label>
+          <span>Código postal</span>
+          <input type="text" name="cp" id="pedidoCp" inputmode="numeric" maxlength="5" pattern="\d{5}" autocomplete="postal-code" required />
+          <small class="ayuda" id="pedidoCpNota" aria-live="polite"></small>
         </label>
         <label>
           <span>Municipio</span>

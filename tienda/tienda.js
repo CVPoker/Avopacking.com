@@ -1,6 +1,7 @@
 /* ====== AvoPack — Tienda en línea ======
    Los precios salen de /tienda/precios.json: plantilla de venta de la semana + $19 por kilo.
-   A dónde llegamos sale de /tienda/zonas.json: municipios por zona, con su envío.
+   A dónde llegamos sale de /tienda/zonas.json: municipios por zona, con su envío y sus
+   códigos postales (los de la ciudad se entregan; los de comunidad se confirman por correo).
    Los pedidos, las altas de negocio y los «avísame» llegan por correo (FormSubmit),
    como el contacto de la portada. */
 
@@ -8,6 +9,7 @@ const CORREO = "avopack.empaque@gmail.com";
 const ENVIO = "https://formsubmit.co/ajax/" + CORREO;
 const MALLAS_MINIMAS = 8;
 const OTRO = "Otro municipio";
+const GUARDADO = "avopack-tienda-ubicacion";
 
 const pesos = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 });
 const pesosConCentavos = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", minimumFractionDigits: 2 });
@@ -19,6 +21,10 @@ let proximamente = [];
 let vigentesDesde = "";
 const cantidades = {};
 const zonaDe = {};
+const municipioDe = {};
+const cpInfo = {};   // cp → { municipio, zona, tipo: "ciudad" | "comunidad" }
+const cpProx = {};   // cp → municipio de «próximamente»
+let ubicacion = null; // a dónde sí llegamos: { municipio, cp, tipo }
 
 const $ = (id) => document.getElementById(id);
 const grid = $("productosGrid");
@@ -35,6 +41,8 @@ function el(tag, attrs, texto) {
 }
 
 function esMalla(p) { return p.id === "malla"; }
+
+function corto(nombre) { return nombre.replace(/ \(.*\)$/, ""); }
 
 function textoEnvio(z) {
   if (!z.envio) return "envío sin costo";
@@ -90,7 +98,8 @@ function pintarZonas() {
     caja.append(tarjetaZona);
   });
   if (proximamente.length) {
-    const pronto = el("p", { class: "proximamente" }, "Próximamente: " + proximamente.join(", ") + ".");
+    const pronto = el("p", { class: "proximamente" },
+      "Próximamente: " + proximamente.map((p) => p.nombre).join(", ") + ".");
     caja.append(pronto);
   }
 
@@ -106,44 +115,162 @@ function pintarZonas() {
   // «¿A dónde te lo llevamos?», lo primero de la página: también los de próximamente y «otro».
   const revisar = $("revisarMunicipio");
   zonas.forEach((z) => z.municipios.forEach((m) => revisar.append(el("option", { value: m.nombre }, m.nombre))));
-  proximamente.forEach((m) => revisar.append(el("option", { value: m }, m)));
+  proximamente.forEach((p) => revisar.append(el("option", { value: p.nombre }, p.nombre)));
   revisar.append(el("option", { value: OTRO }, OTRO));
-  const nombres = zonas.flatMap((z) => z.municipios.map((m) => m.nombre.replace(/ \(.*\)$/, "")));
+  const nombres = zonas.flatMap((z) => z.municipios.map((m) => corto(m.nombre)));
   $("dondeLista").textContent =
     "Entregamos en " + nombres.slice(0, -1).join(", ") + " y " + nombres[nombres.length - 1] + ".";
 
   // La regla de negocios por zona.
   const reglas = $("negociosReglas");
   zonas.slice().reverse().forEach((z) => {
-    const nombres = z.municipios.map((m) => m.nombre.replace(/ \(.*\)$/, ""));
+    const nombres = z.municipios.map((m) => corto(m.nombre));
     reglas.prepend(el("li", {}, "Pedido mínimo de " + z.minimo_negocio_kg + " kg en " + nombres.join(", ")));
   });
 }
 
+/* ====== ¿A DÓNDE TE LO LLEVAMOS? ====== */
+// Qué se sabe de un código postal: dónde cae y si llegamos.
+function buscarCp(cp) {
+  if (!/^\d{5}$/.test(cp)) return null;
+  if (cpInfo[cp]) return { cp, ...cpInfo[cp] };
+  if (cpProx[cp]) return { cp, municipio: cpProx[cp], tipo: "proximamente" };
+  return { cp, tipo: "fuera" };
+}
+
+function resultado(clase, texto, enlace) {
+  const res = $("revisarResultado");
+  res.hidden = false;
+  res.className = "donde-resultado " + clase;
+  res.replaceChildren(document.createTextNode(texto + " "), el("a", { href: enlace[0] }, enlace[1]));
+}
+
+const A_PRODUCTOS = ["#productos", "Escoge tu aguacate"];
+const A_AVISAME = ["#avisameForm", "Avísame cuando lleguen"];
+
+function avisame(municipio, cp) {
+  const f = $("avisameForm").elements;
+  f.municipio.value = municipio || "";
+  f.cp.value = cp || "";
+}
+
 function revisarMunicipio() {
   const m = $("revisarMunicipio").value;
-  const res = $("revisarResultado");
-  if (!m) { res.hidden = true; return; }
-  res.hidden = false;
+  $("revisarCp").value = "";
+  if (!m) { $("revisarResultado").hidden = true; return; }
   const z = zonaDe[m];
   if (z) {
-    res.className = "donde-resultado ok";
-    res.replaceChildren(
-      document.createTextNode("¡Sí llegamos a " + m + "! Te lo llevamos el martes, con " + textoEnvio(z) + ". "),
-      el("a", { href: "#productos" }, "Escoge tu aguacate")
-    );
-    pedidoMunicipio.value = m;
-    pintarResumen();
+    const conComunidades = municipioDe[m].cp_comunidad.length > 0;
+    resultado("ok",
+      "¡Sí llegamos a " + corto(m) + "! Te lo llevamos el martes, con " + textoEnvio(z) + "." +
+      (conComunidades ? " ¿Vives en una comunidad o rancho? Escribe tu código postal para revisarlo." : ""),
+      A_PRODUCTOS);
+    fijarUbicacion({ municipio: m, cp: "", tipo: "" });
   } else {
-    res.className = "donde-resultado no";
-    res.replaceChildren(
-      document.createTextNode(m === OTRO
-        ? "Todavía no llegamos a todos lados. "
-        : "Todavía no llegamos a " + m + ", pero ya viene. "),
-      el("a", { href: "#avisameForm" }, "Avísame cuando lleguen")
-    );
-    $("avisameForm").elements.municipio.value = m === OTRO ? "" : m;
+    resultado("no",
+      m === OTRO ? "Todavía no llegamos a todos lados." : "Todavía no llegamos a " + m + ", pero ya viene.",
+      A_AVISAME);
+    avisame(m === OTRO ? "" : m, "");
+    quitarUbicacion();
   }
+}
+
+function revisarCp() {
+  const campo = $("revisarCp");
+  campo.value = campo.value.replace(/\D/g, "");
+  const cp = campo.value;
+  if (cp.length < 5) { $("revisarResultado").hidden = true; return; }
+  const r = buscarCp(cp);
+  const cubierto = r.tipo === "ciudad" || r.tipo === "comunidad";
+  $("revisarMunicipio").value = cubierto ? r.municipio : "";
+  if (r.tipo === "ciudad") {
+    resultado("ok", "¡Sí llegamos al " + cp + ", " + corto(r.municipio) + "! Te lo llevamos el martes, con " +
+      textoEnvio(r.zona) + ".", A_PRODUCTOS);
+  } else if (r.tipo === "comunidad") {
+    resultado("duda", "El " + cp + " es de una comunidad de " + corto(r.municipio) +
+      ". Haz tu pedido y te confirmamos por correo si llegamos, antes de cobrarte.", A_PRODUCTOS);
+  } else if (r.tipo === "proximamente") {
+    resultado("no", "Todavía no llegamos al " + cp + ", " + r.municipio + ", pero ya viene.", A_AVISAME);
+    avisame(r.municipio, cp);
+  } else {
+    resultado("no", "Todavía no llegamos al " + cp + ".", A_AVISAME);
+    avisame("", cp);
+  }
+  if (cubierto) fijarUbicacion(r);
+  else quitarUbicacion();
+}
+
+// Dónde sí llegamos: se queda arriba en toda la página, en el pedido y en el teléfono.
+function fijarUbicacion(u) {
+  ubicacion = { municipio: u.municipio, cp: u.cp || "", tipo: u.tipo || "" };
+  try {
+    localStorage.setItem(GUARDADO, JSON.stringify({ municipio: ubicacion.municipio, cp: ubicacion.cp }));
+  } catch (e) { /* sin guardado: la página funciona igual */ }
+  const m = corto(ubicacion.municipio);
+  const cp = ubicacion.cp ? " (" + ubicacion.cp + ")" : "";
+  const z = zonaDe[ubicacion.municipio];
+  $("ubicacionTexto").textContent = ubicacion.tipo === "comunidad"
+    ? "Comunidad de " + m + cp + " · por confirmar"
+    : "Entrega en " + m + cp + " · martes · " + (z.envio ? "envío " + pesos.format(z.envio) : "envío sin costo");
+  $("ubicacion").hidden = false;
+  llenarPedido();
+}
+
+// Si revisa un lugar donde no llegamos, la franja ya no habla de otro.
+function quitarUbicacion() {
+  ubicacion = null;
+  try { localStorage.removeItem(GUARDADO); } catch (e) { /* sin guardado */ }
+  $("ubicacion").hidden = true;
+}
+
+function llenarPedido() {
+  if (!ubicacion) return;
+  pedidoMunicipio.value = ubicacion.municipio;
+  pedidoCp.value = ubicacion.cp;
+  revisarPedidoCp();
+}
+
+function restaurarUbicacion() {
+  let g = null;
+  try { g = JSON.parse(localStorage.getItem(GUARDADO) || "null"); } catch (e) { g = null; }
+  if (!g) return;
+  if (g.cp && cpInfo[g.cp]) {
+    $("revisarCp").value = g.cp;
+    revisarCp();
+  } else if (g.municipio && zonaDe[g.municipio]) {
+    $("revisarMunicipio").value = g.municipio;
+    revisarMunicipio();
+  }
+}
+
+/* ====== EL CÓDIGO POSTAL DEL PEDIDO ====== */
+const pedidoCp = $("pedidoCp");
+
+function revisarPedidoCp() {
+  pedidoCp.value = pedidoCp.value.replace(/\D/g, "");
+  const nota = $("pedidoCpNota");
+  pedidoCp.setCustomValidity("");
+  nota.textContent = "";
+  const r = buscarCp(pedidoCp.value);
+  if (r && (r.tipo === "ciudad" || r.tipo === "comunidad")) {
+    pedidoMunicipio.value = r.municipio;
+    nota.textContent = r.tipo === "comunidad"
+      ? "Comunidad de " + corto(r.municipio) + ": te confirmamos por correo si llegamos, antes de cobrarte."
+      : corto(r.municipio) + ": te lo llevamos el martes.";
+  } else if (r) {
+    pedidoCp.setCustomValidity("Todavía no llegamos a ese código postal.");
+    nota.textContent = "Todavía no llegamos a ese código postal. Déjanos tu correo en «Avísame».";
+  }
+  revisarPedidoMunicipio();
+}
+
+// El municipio tiene que ser el de su código postal.
+function revisarPedidoMunicipio() {
+  const info = cpInfo[pedidoCp.value];
+  pedidoMunicipio.setCustomValidity(info && info.municipio !== pedidoMunicipio.value
+    ? "El código postal " + pedidoCp.value + " es de " + corto(info.municipio) + "."
+    : "");
+  pintarResumen();
 }
 
 /* ====== PEDIDO ====== */
@@ -214,12 +341,19 @@ async function cargar() {
     vigentesDesde = precios.vigentes_desde;
     zonas = z.zonas;
     proximamente = z.proximamente || [];
-    zonas.forEach((zona) => zona.municipios.forEach((m) => { zonaDe[m.nombre] = zona; }));
+    zonas.forEach((zona) => zona.municipios.forEach((m) => {
+      zonaDe[m.nombre] = zona;
+      municipioDe[m.nombre] = m;
+      m.cp_ciudad.forEach((cp) => { cpInfo[cp] = { municipio: m.nombre, zona, tipo: "ciudad" }; });
+      m.cp_comunidad.forEach((cp) => { cpInfo[cp] = { municipio: m.nombre, zona, tipo: "comunidad" }; });
+    }));
+    proximamente.forEach((p) => p.cps.forEach((cp) => { cpProx[cp] = p.nombre; }));
 
     productos.forEach((p) => { cantidades[p.id] = 0; grid.append(tarjeta(p)); });
     $("preciosVigencia").textContent = "Precios de la semana del " + fechaLarga.format(new Date(vigentesDesde)) + ".";
     pintarZonas();
     pintarResumen();
+    restaurarUbicacion();
   } catch (e) {
     $("preciosVigencia").textContent = "";
     const aviso = el("p", { class: "aviso aviso-err" }, "No pudimos cargar la tienda. Escríbenos a ");
@@ -272,8 +406,15 @@ async function enviar(form, status, mensajeOk, antes) {
   }
 }
 
-pedidoMunicipio.addEventListener("change", pintarResumen);
+pedidoMunicipio.addEventListener("change", revisarPedidoMunicipio);
+pedidoCp.addEventListener("input", revisarPedidoCp);
 $("revisarMunicipio").addEventListener("change", revisarMunicipio);
+$("revisarCp").addEventListener("input", revisarCp);
+$("ubicacionCambiar").addEventListener("click", (e) => {
+  e.preventDefault();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  $("revisarMunicipio").focus({ preventScroll: true });
+});
 
 pedidoForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -290,9 +431,16 @@ pedidoForm.addEventListener("submit", async (e) => {
       $("campoEnvio").value = pesos.format(c.envio || 0);
       $("campoTotal").value = pesos.format(c.total);
       $("campoPrecios").value = "Precios de la semana del " + vigentesDesde;
+      const info = cpInfo[pedidoCp.value];
+      $("campoEntrega").value = info && info.tipo === "comunidad"
+        ? "Comunidad: confirmar por correo antes de cobrar"
+        : "Ciudad";
     }
   );
-  if (ok) productos.forEach((p) => p.reiniciar());
+  if (ok) {
+    productos.forEach((p) => p.reiniciar());
+    llenarPedido();
+  }
   pintarResumen();
 });
 
